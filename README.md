@@ -37,3 +37,16 @@
 
         $env:TOKEN = "ваш_api_ключ" ; npm run start в PowerShell
 
+## Production build
+В продакшн сборке переменные окружения (в данном случае api ключ) не будут автоматически вставлены в код. Нужно обрабатывать их вручную в процессе сборки.
+
+В данном проекте в качестве сборщика используется Webpack, поэтому в файле webpack.config.js нужно вручную передать переменные окружения через DefinePlugin:
+
+        module.exports = {
+        // остальная конфигурация...
+            plugins: [
+                new webpack.DefinePlugin({
+                    'process.env.MY_VARIABLE': JSON.stringify(process.env.MY_VARIABLE),
+                    }),    
+                ],
+        };
