@@ -46,7 +46,7 @@
         // остальная конфигурация...
             plugins: [
                 new webpack.DefinePlugin({
-                    'process.env.MY_VARIABLE': JSON.stringify(process.env.MY_VARIABLE),
+                    'process.env.TOKEN': JSON.stringify(process.env.TOKEN),
                     }),    
                 ],
         };
