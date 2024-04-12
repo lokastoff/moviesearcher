@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { searchMovieByName } from "../../services/ApiCalls";
 import { Loading } from "../Loading/Loading";
+import { motion } from "framer-motion";
 
 interface SuggestInterface {
     id: number;
@@ -68,11 +69,11 @@ export const MovieSearchSection:React.FC = () =>{
                 <div className="searchContainer mb-[100px] w-full sm:max-w-[50%]  relative ">
                     <input type="text" onChange={handleOnInput} onFocus={handleOnFocus} onBlur={handleOnBlur}placeholder="Звёздные войны. Эпизод 4: Новая надежда" className="w-full rounded-[40px] border-[1px] border-[#1e445c] text-center placeholder:text-[0.7rem]"/>
                     { isInputFocused && inputValue && (
-                        <div className="searchResultsContainer ">
-                            {isLoading ? <div className="text-white"><Loading/></div> :
-                                <ul className=" bg-[#0c2738] text-white absolute w-full rounded-[8px] z-[100]">
+                        <div className="searchResultsContainer relative">
+                            {isLoading ? <div className="bg-[#0c2738] text-white flex w-full items-center justify-center h-[300px] absolute z-[100] rounded-[8px]"><Loading/></div> :
+                                <ul className=" text-white absolute w-full rounded-[8px] z-[100]">
                                     {suggestions.map((suggestion: SuggestInterface) => (
-                                        <li key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id)} className="px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] border-[1px] w-full"><span>{suggestion.name} ({suggestion.year})</span></li>
+                                        <motion.li whileHover={{scale:1.02}} key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id)} className="bg-[#0c2738] rounded-[8px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] border-[1px] w-full"><span>{suggestion.name?suggestion.name:suggestion.alternativeName} ({suggestion.year})</span></motion.li>
                                     ))}
                                 </ul>
                             }
