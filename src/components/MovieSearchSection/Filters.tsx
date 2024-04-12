@@ -24,7 +24,7 @@ export const Filters:React.FC = () => {
         const words = countryName.split(' ');
     
         const formattedWords = words.map(word => {
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            return word.charAt(0).toUpperCase() + word.slice(1);
         });
         return formattedWords.join(' ');
     };
