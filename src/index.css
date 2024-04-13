@@ -32,6 +32,11 @@ body {
     max-width: 95px; 
   }
 }
+.custom-carousel .slick-dots {
+  position: relative; /* или можно использовать 'absolute' при необходимости */
+  bottom: -25px; /* регулируйте значение в зависимости от вашего дизайна */
+  width: 100%; 
+}
 
 
 @tailwind base;

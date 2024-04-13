@@ -36,7 +36,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="404" element={<NotFound />} />
-          <Route path="movie/:id" element={<MoviePage/>}/>
+          <Route path="movie/:id" element={<MoviePage / >}/>
         </Route>
       </Routes>
     } 

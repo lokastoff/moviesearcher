@@ -43,7 +43,7 @@ export const fetchMovies = async (page:number,limit:number, year?: string, count
   }
 }
 
-export const fetchMovieInfo = async (id:string) =>{
+export const fetchMovieInfoById = async (id:string) =>{
   try{
     const response:AxiosResponse = await apiClient.get(`/v1.4/movie/${id}`)
     return response.data
@@ -55,6 +55,25 @@ export const fetchMovieInfo = async (id:string) =>{
 export const searchMovieByName = async (name:string) =>{
   try{
     const response:AxiosResponse = await apiClient.get(`/v1.4/movie/search?page=1&limit=5&query=${name}`)
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}
+
+export const fetchSeasonsData = async (page:number,limit:number,movieId:string)=>{
+  try{
+    const response:AxiosResponse = await apiClient.get(`https://api.kinopoisk.dev/v1.4/season?page=${page}&limit=${limit}&movieId=${movieId}`)
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+  
+}
+
+export const fetchPostersData = async (id:string) =>{
+  try{
+    const response:AxiosResponse = await apiClient.get(`/v1.4/image?selectFields=url&movieId=${id}&type=!cover&type=!shooting`)
     return response.data
   }catch(error){
     console.log(error)

@@ -5,11 +5,18 @@ import { searchMovieByName } from "../../services/ApiCalls";
 import { Loading } from "../Loading/Loading";
 import { motion } from "framer-motion";
 
+interface SuggestSeriesReleaseYears{
+    start:number
+    end:number
+}
+
 interface SuggestInterface {
     id: number;
     name: string;
     alternativeName:string
     year:string
+    isSeries: boolean
+    releaseYears: SuggestSeriesReleaseYears[]
 }
 
 interface ApiResponse {
@@ -32,6 +39,7 @@ export const MovieSearchSection:React.FC = () =>{
             try {
                 const data:ApiResponse = await searchMovieByName(inputValue);
                 setSuggestions(data.docs);
+                console.log(data.docs)
             } catch (error) {
                 console.error(error);
             }
@@ -73,7 +81,7 @@ export const MovieSearchSection:React.FC = () =>{
                             {isLoading ? <div className="bg-[#0c2738] text-white flex w-full items-center justify-center h-[300px] absolute z-[100] rounded-[8px]"><Loading/></div> :
                                 <ul className=" text-white absolute w-full rounded-[8px] z-[100]">
                                     {suggestions.map((suggestion: SuggestInterface) => (
-                                        <motion.li whileHover={{scale:1.02}} key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id)} className="bg-[#0c2738] rounded-[8px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] border-[1px] w-full"><span>{suggestion.name?suggestion.name:suggestion.alternativeName} ({suggestion.year})</span></motion.li>
+                                        <motion.li whileHover={{scale:1.02}} key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id)} className="bg-[#0c2738] rounded-[4px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] max-sm:border-black border-[1px] w-full"><span>{suggestion.name?suggestion.name:suggestion.alternativeName} ({suggestion.isSeries?'сериал':null} {suggestion.year} {suggestion.isSeries?`- ${suggestion.releaseYears[0].end}`:null})</span></motion.li>
                                     ))}
                                 </ul>
                             }
