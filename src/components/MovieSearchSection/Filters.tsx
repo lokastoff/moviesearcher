@@ -1,23 +1,44 @@
 import { MovieTable } from "./MovieTable"
 import { useState } from "react";
 import { Select } from 'antd';
+import { useSearchParams } from 'react-router-dom';
+import { setUrl } from "../../store/slices/searchParamsSlice";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+
 export const Filters:React.FC = () => {
-    const [year, setYear] = useState<string>('');
-    const [yearToPass, setYearToPass] = useState<string>('');
-    const [country, setCountry] = useState<string>('');
-    const [countryToPass, setCountryToPass] = useState<string>('');
-    const [rating, setRating] = useState<string[]>([]);
-    const [ratingToPass, setRatingToPass] = useState<string[]>([]);
+    const dispatch = useDispatch()
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [year, setYear] = useState<string>(searchParams.get('year') || '');
+    const [country, setCountry] = useState<string>(searchParams.get('country') || '');
+    const ratingParam = searchParams.get('rating');
+    const [rating, setRating] = useState<string[]>(ratingParam ? ratingParam.split(',') : []);
+
+    
 
     const handleFilter = () =>{
-        setYearToPass(year)
-        setCountryToPass(country)
-        setRatingToPass(rating)
+        const params = new URLSearchParams(searchParams.toString());
+
+        if (year) {
+            params.set("year", year);
+        }
+        if (country) {
+            params.set("country", country);
+        }
+        if (rating.length > 0) {
+            params.set("rating", rating.join(','));
+        }
+
+        setSearchParams(params);
+        dispatch(setUrl(`?${params.toString()}`));
+        
     }
 
     const handleYearFilter =  (e:React.ChangeEvent<HTMLInputElement>) => {
-        const onlyNums:string = e.target.value.replace(/[^0-9]/g, '');
+        const onlyNums = e.target.value.replace(/[^0-9]/g, '');
         setYear(onlyNums);
+        
     }
 
     const formatCountryName = (countryName: string): string => {
@@ -30,8 +51,7 @@ export const Filters:React.FC = () => {
     };
 
     const handleCountryFilter =  (e:React.ChangeEvent<HTMLInputElement>) => {
-        const onlyCyrillicLetters = e.target.value.replace(/[^а-яА-ЯёЁ ]/g, '');
-        const formattedCountry = formatCountryName(onlyCyrillicLetters);
+        const formattedCountry = formatCountryName(e.target.value.replace(/[^а-яА-ЯёЁ ]/g, ''));
         setCountry(formattedCountry);
     }
 
@@ -62,7 +82,7 @@ export const Filters:React.FC = () => {
                     <button type="submit" onClick={handleFilter} className="px-[10px] py-[3px] text-[0.8rem] rounded-[40px] border-[1px] border-[#1e445c] bg-white text-[#336d91]">Отфильтровать</button>
                 </div>
             </div>
-            <MovieTable year={yearToPass} country={countryToPass} ageRating={ratingToPass}/>
+            <MovieTable year={year} country={country} ageRating={rating}/>
         </div>
     )
 }

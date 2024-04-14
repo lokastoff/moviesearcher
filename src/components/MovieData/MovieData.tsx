@@ -10,7 +10,10 @@ import { PostersCarousel } from "./PostersCarousel/PostersCarousel"
 import { SimmilarMovies } from "./SimmilarMovies.tsx/SimmilarMovies"
 import { SimmilarMoviesInterface } from "./SimmilarMovies.tsx/SimmilarMovies"
 import { UserReviews } from "./UserReviews.tsx/UserReviews"
-
+import { Button } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 export interface ActorInfoInterface {
     description: string;
@@ -53,9 +56,11 @@ export const MovieData:React.FC = () =>{
     const [ratingKp, setRatingKp] = useState('')
     const [ratingImdb, setRatingImdb] = useState('')
     const [actors,setActors] = useState<ActorInfoInterface[]>([])
-    const [reviews,setReviews] = useState<string[]>([])
     const [simMovies, setSimMovies] = useState<SimmilarMoviesInterface[]>([])
     const { id } = useParams<{ id: string }>();
+
+    const url = useSelector((state:any) => state.navigation.url);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const data = async () => {
@@ -92,6 +97,9 @@ export const MovieData:React.FC = () =>{
             
       },[id]);
 
+      const handleBack = () => {
+        navigate(url?`/${url}`:`/`);
+      };
 
       if (isLoading) {
         return (
@@ -103,6 +111,9 @@ export const MovieData:React.FC = () =>{
     return(
         <section className="bg-[#081b27] min-h-[90vh] ">
             <div className="topInfoContainer flex max-sm:flex-col pt-[100px] h-auto max-sm:py-[50px] px-[300px] max-sm:px-0 max-sm:items-center">
+                <div className="absolute left-[1px] sm:ml-[100px] ml-[10px] top-[1px] sm:mt-[130px] mt-[92px]">
+                    <Button onClick={()=>handleBack()} shape="circle" icon={<ArrowLeftOutlined style={{color:'black'}}/>}/>
+                </div>
                 <ImgAndRating mainImg={mainImg} ratingKp={ratingKp} ratingImdb={ratingImdb}/>
                 <div className="max-sm:mt-[30px]">
                     <MovieDescription isSeries={isTitleSeries} titleName={titleName} titleYear={titleYear} alternativeName={alternativeName} ageRating={ageRating} description={description} seasonEndYear={seasonEndYear}/>
@@ -123,8 +134,8 @@ export const MovieData:React.FC = () =>{
                 <PostersCarousel id={id as string}/>
                 <SimmilarMovies simmilarMoviesArray={simMovies}/>
             </div>
-            <div className="reviewsContainer pt-[300px] pb-[30px]">
-                <UserReviews/>
+            <div className="reviewsContainer pt-[300px] pb-[30px] max-sm:pt-[150px]">
+                <UserReviews id={id as string}/>
             </div>
         </section>
     )

@@ -4,6 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { searchMovieByName } from "../../services/ApiCalls";
 import { Loading } from "../Loading/Loading";
 import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { setUrl } from "../../store/slices/searchParamsSlice";
+
 
 interface SuggestSeriesReleaseYears{
     start:number
@@ -25,6 +30,9 @@ interface ApiResponse {
 
 
 export const MovieSearchSection:React.FC = () =>{
+    const dispatch = useDispatch()
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const navigate = useNavigate();
 
@@ -63,7 +71,13 @@ export const MovieSearchSection:React.FC = () =>{
             setInputFocused(false);
         }, 100);
     }
-    const handleSuggestClick = (id:number) => navigate(`/movie/${id}`)
+    const handleSuggestClick = (id:number) => {
+        const params = new URLSearchParams(searchParams.toString());
+
+        setSearchParams(params);
+        dispatch(setUrl(`?${params.toString()}`));
+        navigate(`/movie/${id}`)
+    }
     
 
 
@@ -81,7 +95,7 @@ export const MovieSearchSection:React.FC = () =>{
                             {isLoading ? <div className="bg-[#0c2738] text-white flex w-full items-center justify-center h-[300px] absolute z-[100] rounded-[8px]"><Loading/></div> :
                                 <ul className=" text-white absolute w-full rounded-[8px] z-[100]">
                                     {suggestions.map((suggestion: SuggestInterface) => (
-                                        <motion.li whileHover={{scale:1.02}} key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id)} className="bg-[#0c2738] rounded-[4px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] max-sm:border-black border-[1px] w-full"><span>{suggestion.name?suggestion.name:suggestion.alternativeName} ({suggestion.isSeries?'сериал':null} {suggestion.year} {suggestion.isSeries?`- ${suggestion.releaseYears[0].end}`:null})</span></motion.li>
+                                        <motion.li whileHover={{scale:1.02}} key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id)} className="bg-[#0c2738] rounded-[4px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] max-sm:border-black border-[1px] w-full"><span>{suggestion.name?suggestion.name:suggestion.alternativeName} ({suggestion.isSeries?' сериал':null} {suggestion.year} {suggestion.isSeries?`- ${suggestion.releaseYears[0].end!==null?suggestion.releaseYears[0].end:''}`:''})</span></motion.li>
                                     ))}
                                 </ul>
                             }

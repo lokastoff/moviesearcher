@@ -9,9 +9,11 @@ const apiClient: AxiosInstance = axios.create({
     },
   });
 
+  type NullableString = string | null;
+
 export const checkEligibility = async () =>{
     try{
-        const response:AxiosResponse = await apiClient.get('/v1.4/movie?page=1&limit=1&selectFields=id')
+        const response = await apiClient.get('/v1.4/movie?page=1&limit=1&selectFields=id')
         console.log('Token is valid');
         return null;
 
@@ -21,7 +23,7 @@ export const checkEligibility = async () =>{
         }   
 }
 
-export const fetchMovies = async (page:number,limit:number, year?: string, country?:string, ageRating?:string[]) =>{
+export const fetchMovies = async (page:number,limit:number, year?: string, country?:string, ageRating?:NullableString[]) =>{
   const selectedFields:string[] = ['name','year','countries','ageRating']
   let query:string = `/v1.4/movie?page=${page}&limit=${limit}&selectFields=id&selectFields=name&selectFields=year&selectFields=ageRating&selectFields=countries&selectFields=alternativeName`
   if (year && year !== '') {
@@ -36,7 +38,7 @@ export const fetchMovies = async (page:number,limit:number, year?: string, count
     })
   }
   try{
-    const response:AxiosResponse = await apiClient.get(query)
+    const response = await apiClient.get(query)
     return response.data;
   }catch(error){
     console.log(error)
@@ -45,7 +47,7 @@ export const fetchMovies = async (page:number,limit:number, year?: string, count
 
 export const fetchMovieInfoById = async (id:string) =>{
   try{
-    const response:AxiosResponse = await apiClient.get(`/v1.4/movie/${id}`)
+    const response = await apiClient.get(`/v1.4/movie/${id}`)
     return response.data
   }catch(error){
     console.log(error)
@@ -54,7 +56,7 @@ export const fetchMovieInfoById = async (id:string) =>{
 
 export const searchMovieByName = async (name:string) =>{
   try{
-    const response:AxiosResponse = await apiClient.get(`/v1.4/movie/search?page=1&limit=5&query=${name}`)
+    const response = await apiClient.get(`/v1.4/movie/search?page=1&limit=5&query=${name}`)
     return response.data
   }catch(error){
     console.log(error)
@@ -63,7 +65,7 @@ export const searchMovieByName = async (name:string) =>{
 
 export const fetchSeasonsData = async (page:number,limit:number,movieId:string)=>{
   try{
-    const response:AxiosResponse = await apiClient.get(`https://api.kinopoisk.dev/v1.4/season?page=${page}&limit=${limit}&movieId=${movieId}`)
+    const response = await apiClient.get(`https://api.kinopoisk.dev/v1.4/season?page=${page}&limit=${limit}&movieId=${movieId}`)
     return response.data
   }catch(error){
     console.log(error)
@@ -73,7 +75,16 @@ export const fetchSeasonsData = async (page:number,limit:number,movieId:string)=
 
 export const fetchPostersData = async (id:string) =>{
   try{
-    const response:AxiosResponse = await apiClient.get(`/v1.4/image?selectFields=url&movieId=${id}&type=!cover&type=!shooting`)
+    const response = await apiClient.get(`/v1.4/image?selectFields=url&movieId=${id}&type=!cover&type=!shooting`)
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}
+
+export const fetchUserReviewsData = async (page:number, limit:number,id:string) =>{
+  try{
+    const response = await apiClient.get(`/v1.4/review?page=${page}&limit=${limit}&movieId=${id}`)
     return response.data
   }catch(error){
     console.log(error)

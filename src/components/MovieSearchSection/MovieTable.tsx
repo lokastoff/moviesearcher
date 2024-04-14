@@ -2,6 +2,7 @@ import { Table } from "antd"
 import { useState, useEffect } from "react";
 import { fetchMovies } from "../../services/ApiCalls";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 interface Country {
     name: string;
   }
@@ -19,38 +20,41 @@ interface Movie {
     country: string;
     ageRating:string[]
   }
-export const MovieTable:React.FC<TableProps> = ({year,country,ageRating}) =>{
+export const MovieTable:React.FC<TableProps> = ({}) =>{
 
     let navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [dataSource, setDataSource] = useState<Movie[]>([])
     const [totalPages, setTotalPages] = useState<number>(1)
     const [isLoading,setIsLoading] = useState<boolean>(true)
-    const [currentPage, setCurrentPage] = useState<number>(1)
-    const [currentPageSize, setCurrentPageSize] = useState<number>(10)
 
-    useEffect(() => {  
+    const year = searchParams.get('year') || '';
+    const country = searchParams.get('country') || '';
+    const rating = searchParams.get('rating')?.split(',') || [];
+    const currentPage = parseInt(searchParams.get('page') || '1');
+    const currentPageSize = parseInt(searchParams.get('pageSize') || '10',10);
+
+    /*useEffect(() => {  
         setCurrentPage(1); 
-      }, [year, country, ageRating]);
+      }, [year, country, ageRating]);*/
 
       useEffect(() => {
         const movieFetchData = async () => {
-            try{
-                setIsLoading(true)
-                const movies = await fetchMovies(currentPage, currentPageSize, year, country, ageRating);
-                setDataSource(movies.docs)
-                setTotalPages(movies.pages)
-                
-            }catch (error){
-                console.error(error)
-            }finally{
-                setIsLoading(false)
+            try {
+                setIsLoading(true);
+                const movies = await fetchMovies(currentPage, currentPageSize, year, country, rating);
+                setDataSource(movies.docs);
+                setTotalPages(movies.pages);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
             }
         };
-            movieFetchData();
-            
-            
-      },[ currentPage, currentPageSize, year, country, ageRating]);
+    
+        movieFetchData();
+    }, [searchParams]);
       console.log(dataSource)
     const columns = [
         {
@@ -77,21 +81,15 @@ export const MovieTable:React.FC<TableProps> = ({year,country,ageRating}) =>{
     ]
     
     const handlePaginationChange = async (page:number, pageSize:number) =>{
-            setIsLoading(true)
-            try{
-                const movies = await fetchMovies(page, pageSize, year, country, ageRating);
-                setDataSource(movies.docs)
-                setTotalPages(movies.pages)
-                setCurrentPage(page)
-                setCurrentPageSize(pageSize)
-            }catch(error){
-                console.error(error)
-            }finally{
-            setIsLoading(false)
+        const currentParams = new URLSearchParams(searchParams);
+
+        currentParams.set('page', page.toString());
+        currentParams.set('pageSize', pageSize.toString());
+    
+        setSearchParams(currentParams);
             }
     
         
-    }
     
     const handleMovieClick = (record: Movie)=>{
         navigate(`/movie/${record.id}`)

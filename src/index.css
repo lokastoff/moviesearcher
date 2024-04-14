@@ -33,10 +33,13 @@ body {
   }
 }
 .custom-carousel .slick-dots {
-  position: relative; /* или можно использовать 'absolute' при необходимости */
-  bottom: -25px; /* регулируйте значение в зависимости от вашего дизайна */
+  position: relative; 
+  bottom: -25px; 
   width: 100%; 
 }
+
+
+
 
 
 @tailwind base;

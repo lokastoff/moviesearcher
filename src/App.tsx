@@ -6,6 +6,8 @@ import { NotFound } from './pages/NotFound';
 import { checkEligibility } from './services/ApiCalls';
 import { Layout } from './pages/Layout/Layout';
 import { MoviePage } from './pages/MoviePage';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 function App() {
 
   const [apiError, setApiError] = useState<string | null>(null);
@@ -30,17 +32,19 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-    {apiError ? <div>{apiError}</div> :
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="404" element={<NotFound />} />
-          <Route path="movie/:id" element={<MoviePage / >}/>
-        </Route>
-      </Routes>
-    } 
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+      {apiError ? <div>{apiError}</div> :
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="404" element={<NotFound />} />
+            <Route path="movie/:id" element={<MoviePage / >}/>
+          </Route>
+        </Routes>
+      } 
+      </BrowserRouter>
+    </Provider>
   );
 }
 

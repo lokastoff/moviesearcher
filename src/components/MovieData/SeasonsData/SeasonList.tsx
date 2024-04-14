@@ -23,11 +23,11 @@ interface Episode {
   }
 
 export const SeasonList:React.FC<SeasonsProps> = ({movieId})=>{
-    const [seasonNumber, setSeasonNumber] = useState<number>(0);
-    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [seasonNumber, setSeasonNumber] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1)
     const [seasonData, setSeasonData] = useState<Episode[]>([]);
-    const [totalSeasons, setTotalSeasons] = useState<number>(0);
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [totalSeasons, setTotalSeasons] = useState(0);
+    const [isLoading, setIsLoading] = useState(false)
     const [valid, setIsValid] = useState(true)
     useEffect(() => {
         const loadData = async () => {

@@ -16,7 +16,7 @@ interface PosterCarouselProps{
 }
 export const SimmilarMovies:React.FC<PosterCarouselProps> = ({simmilarMoviesArray}) =>{
     const navigate = useNavigate()
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState(false)
     console.log(simmilarMoviesArray)
 
     const handleMovieClick = (id:string) => navigate(`/movie/${id}`)
@@ -36,7 +36,7 @@ export const SimmilarMovies:React.FC<PosterCarouselProps> = ({simmilarMoviesArra
                 </Carousel>
             </div>
         </section>
-        :<div className='headerContainer mb-[30px] w-full text-center'>
+        :<div className='headerContainer mb-[30px] w-full text-center  '>
             <h1 className='text-white font-bold text-[3rem] text-center mb-[30px]'>Похожие фильмы</h1>
             <div className='text-center'><span className='text-white font-bold text-[1.5rem]'>Не найдено похожих фильмов</span></div>
         </div>

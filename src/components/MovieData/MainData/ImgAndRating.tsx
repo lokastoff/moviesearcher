@@ -6,10 +6,10 @@ interface ImgAndRatingProps{
 }
 
 export const ImgAndRating:React.FC<ImgAndRatingProps> = ({mainImg, ratingImdb,ratingKp}) =>{
-    const ratingKpToNum:number = parseFloat(ratingKp)
-    const fixedRatingKp:string = ratingKpToNum.toFixed(1)
-    const ratingImdbToNum:number = parseFloat(ratingImdb)
-    const fixedRatingImdb:string = ratingImdbToNum.toFixed(1)
+    const ratingKpToNum = parseFloat(ratingKp)
+    const fixedRatingKp= ratingKpToNum.toFixed(1)
+    const ratingImdbToNum = parseFloat(ratingImdb)
+    const fixedRatingImdb = ratingImdbToNum.toFixed(1)
     return(
         <section className="imgAndRatingContainer flex flex-col gap-[10px] w-full max-w-[350px] sm:min-w-[250px] h-auto ">
             {mainImg?
@@ -28,7 +28,7 @@ export const ImgAndRating:React.FC<ImgAndRatingProps> = ({mainImg, ratingImdb,ra
             {ratingImdbToNum>0?
             <div className="imdbRating flex justify-between">
                 <span className="text-white font-bold text-[1.5rem]">Рейтинг IMDB</span>
-                <span className="text-white font-bold text-[1.5rem] ">{ratingImdb}</span>
+                <span className="text-white font-bold text-[1.5rem] ">{fixedRatingImdb}</span>
             </div>
             :null}   
         </section>

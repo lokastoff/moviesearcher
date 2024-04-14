@@ -16,7 +16,7 @@ interface PosterCarouselProps{
 }
 export const PostersCarousel:React.FC<PosterCarouselProps> = ({id}) =>{
     const [postersUrl, setPostesUrl] = useState<PostersInterface[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(()=>{
         const data = async()=>{
         try{
@@ -31,7 +31,7 @@ export const PostersCarousel:React.FC<PosterCarouselProps> = ({id}) =>{
     },[])
     return(
         postersUrl.length>0?
-        <section className="sectionPosters w-[50%] max-sm:w-full flex flex-col items-center max-sm:px-[15px] max-sm:mb-[100px]">
+        <section className="sectionPosters w-[50%] max-sm:w-full flex flex-col items-center max-sm:px-[15px] max-sm:mb-[100px] ">
             <div className='headerContainer mb-[30px]'>
                 <h1 className='text-white font-bold text-[3rem] text-center'>Постеры</h1>
             </div>
@@ -45,7 +45,7 @@ export const PostersCarousel:React.FC<PosterCarouselProps> = ({id}) =>{
                 </Carousel>
             </div>
         </section>
-        :<div className='headerContainer mb-[30px]'>
+        :<div className='headerContainer mb-[30px] mx-auto w-full'>
             <h1 className='text-white font-bold text-[3rem] text-center mb-[30px]'>Постеры</h1>
             <div className='text-center'><span className='text-white font-bold text-[1.5rem]'>Не найдено постеров</span></div>
         </div>
