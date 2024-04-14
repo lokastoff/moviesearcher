@@ -16,7 +16,6 @@ function App() {
 
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const isLogged = useSelector((state: RootState) => state.auth.isLogged);
   useEffect(() => {
     const fetchEligibility = async () => {
       const errorMsg:string | null = await checkEligibility();
@@ -44,7 +43,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="404" element={<NotFound />} />
             <Route path="movie/:id" element={<MoviePage / >}/>
-            <Route path="login" element={isLogged ? <Navigate to="/" replace /> : <LogPage />}/>
+            <Route path="login" element={<LogPage />} />
           </Route>
         </Routes>
       } 
