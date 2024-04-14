@@ -55,7 +55,7 @@ export const MovieTable:React.FC<TableProps> = ({}) =>{
     
         movieFetchData();
     }, [searchParams]);
-      console.log(dataSource)
+      
     const columns = [
         {
             title:'Название фильма',

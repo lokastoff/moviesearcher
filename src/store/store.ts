@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import navigationReducer from './slices/searchParamsSlice';
-
+import searchReducer from './slices/searchLatestSlice'
+import authReducer from './slices/isLoggedSlice';
 export const store = configureStore({
     reducer: {
-        navigation: navigationReducer
+        navigation: navigationReducer,
+        search: searchReducer,
+        auth: authReducer,
       }
 });
 

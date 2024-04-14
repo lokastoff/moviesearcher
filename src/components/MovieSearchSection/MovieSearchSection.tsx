@@ -8,8 +8,9 @@ import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { setUrl } from "../../store/slices/searchParamsSlice";
-
-
+import { addSearchTerm } from "../../store/slices/searchLatestSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 interface SuggestSeriesReleaseYears{
     start:number
     end:number
@@ -30,16 +31,18 @@ interface ApiResponse {
 
 
 export const MovieSearchSection:React.FC = () =>{
+    const recentSearches = useSelector((state:RootState) => state.search.recentSearches);
     const dispatch = useDispatch()
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const navigate = useNavigate();
 
-    const [inputValue, setInputValue] = useState('');
+    let [inputValue, setInputValue] = useState('');
     const [suggestions, setSuggestions] = useState<SuggestInterface[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isInputFocused, setInputFocused] = useState(false);
+    const [isInputEmpty, setIsInputEmpty] = useState(true)
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -71,7 +74,9 @@ export const MovieSearchSection:React.FC = () =>{
             setInputFocused(false);
         }, 100);
     }
-    const handleSuggestClick = (id:number) => {
+    const handleSuggestClick = (id:number, inputValue:string) => {
+        dispatch(addSearchTerm(inputValue))
+        console.log(recentSearches)
         const params = new URLSearchParams(searchParams.toString());
 
         setSearchParams(params);
@@ -89,18 +94,33 @@ export const MovieSearchSection:React.FC = () =>{
                     <h1 className="font-black text-[3.125rem] text-white text-center">Начни искать сейчас!</h1>
                 </div>
                 <div className="searchContainer mb-[100px] w-full sm:max-w-[50%]  relative ">
-                    <input type="text" onChange={handleOnInput} onFocus={handleOnFocus} onBlur={handleOnBlur}placeholder="Звёздные войны. Эпизод 4: Новая надежда" className="w-full rounded-[40px] border-[1px] border-[#1e445c] text-center placeholder:text-[0.7rem]"/>
+                    <input type="text" value={inputValue} onChange={handleOnInput} onFocus={handleOnFocus} onBlur={handleOnBlur} placeholder="Звёздные войны. Эпизод 4: Новая надежда" className="w-full rounded-[40px] border-[1px] border-[#1e445c] text-center placeholder:text-[0.7rem]"/>
                     { isInputFocused && inputValue && (
                         <div className="searchResultsContainer relative">
                             {isLoading ? <div className="bg-[#0c2738] text-white flex w-full items-center justify-center h-[300px] absolute z-[100] rounded-[8px]"><Loading/></div> :
                                 <ul className=" text-white absolute w-full rounded-[8px] z-[100]">
                                     {suggestions.map((suggestion: SuggestInterface) => (
-                                        <motion.li whileHover={{scale:1.02}} key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id)} className="bg-[#0c2738] rounded-[4px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] max-sm:border-black border-[1px] w-full"><span>{suggestion.name?suggestion.name:suggestion.alternativeName} ({suggestion.isSeries?' сериал':null} {suggestion.year} {suggestion.isSeries?`- ${suggestion.releaseYears[0].end!==null?suggestion.releaseYears[0].end:''}`:''})</span></motion.li>
+                                        <motion.li whileHover={{scale:1.02}} key={suggestion.id} onClick={() => handleSuggestClick(suggestion.id, inputValue)} className="bg-[#0c2738] rounded-[4px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] max-sm:border-black border-[1px] w-full"><span>{suggestion.name?suggestion.name:suggestion.alternativeName} ({suggestion.isSeries?' сериал':null} {suggestion.year} {suggestion.isSeries?`- ${suggestion.releaseYears[0].end!==null?suggestion.releaseYears[0].end:''}`:''})</span></motion.li>
                                     ))}
                                 </ul>
                             }
+                            
                         </div>
                     )}
+                    { isInputFocused && !inputValue && (
+                        <div className="searchResultsContainer relative">
+                                <ul className="text-white absolute w-full rounded-[8px] z-[100]">
+                                {recentSearches.slice(0, 3).map((search, index) => (
+                                    <motion.li whileHover={{scale:1.02}} key={index} onClick={(e) => {
+                                        setInputValue('')
+                                        setInputValue(search);
+                                    }}  className="bg-[#0c2738] rounded-[4px] px-[10px] h-[60px] max-sm:h-[80px] flex items-center border-[#00000080] max-sm:border-black border-[1px] w-full"><span>{search}</span></motion.li>
+                                ))}
+                            </ul> 
+                            
+                        </div>
+                    )}
+                    
                 </div>
                 <Filters/>
             </div>

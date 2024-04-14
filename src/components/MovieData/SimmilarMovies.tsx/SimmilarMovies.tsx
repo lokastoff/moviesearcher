@@ -22,7 +22,7 @@ export const SimmilarMovies:React.FC<PosterCarouselProps> = ({simmilarMoviesArra
     const handleMovieClick = (id:string) => navigate(`/movie/${id}`)
     return(
         simmilarMoviesArray.length>0?
-        <section className="sectionPosters w-[50%] max-sm:w-full flex flex-col items-center max-sm:px-[15px]">
+        <section className="sectionPosters w-full sm:max-w-[50%] max-sm:w-full flex flex-col items-center max-sm:px-[15px]">
             <div className='headerContainer mb-[30px]'>
                 <h1 className='text-white font-bold text-[3rem] text-center'>Похожие фильмы</h1>
             </div>

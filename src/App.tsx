@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { useEffect, useState } from 'react';
 import { Loading } from './components/Loading/Loading';
@@ -8,11 +8,15 @@ import { Layout } from './pages/Layout/Layout';
 import { MoviePage } from './pages/MoviePage';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import { LogPage } from './pages/LogPage/LogPage';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
+
 function App() {
 
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const isLogged = useSelector((state: RootState) => state.auth.isLogged);
   useEffect(() => {
     const fetchEligibility = async () => {
       const errorMsg:string | null = await checkEligibility();
@@ -40,6 +44,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="404" element={<NotFound />} />
             <Route path="movie/:id" element={<MoviePage / >}/>
+            <Route path="login" element={isLogged ? <Navigate to="/" replace /> : <LogPage />}/>
           </Route>
         </Routes>
       } 
